@@ -118,7 +118,7 @@ class RecipeView {
           </a>
         </div>
 
-        
+
     
     `;
     
