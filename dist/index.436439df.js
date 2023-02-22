@@ -461,6 +461,8 @@ var _runtime = require("regenerator-runtime/runtime");
 var _modelJs = require("./model.js");
 var _recipeViewJs = require("./views/recipeView.js");
 var _recipeViewJsDefault = parcelHelpers.interopDefault(_recipeViewJs);
+var _searchViewJs = require("./views/searchView.js");
+var _searchViewJsDefault = parcelHelpers.interopDefault(_searchViewJs);
 const recipeContainer = document.querySelector('.recipe');
 const controlRecipes = async function() {
     // Loading the recipe
@@ -476,12 +478,23 @@ const controlRecipes = async function() {
         _recipeViewJsDefault.default.renderError();
     }
 };
+const controlSearchResults = async function() {
+    try {
+        const query = _searchViewJsDefault.default.getQuery();
+        if (!query) return;
+        await _modelJs.loadSearchResults(query);
+        console.log(_modelJs.state.search.results);
+    } catch (err) {
+        console.log(err);
+    }
+};
 const init = function() {
     _recipeViewJsDefault.default.addHandlerRender(controlRecipes);
+    _searchViewJsDefault.default.addHandlerSearch(controlSearchResults);
 };
 init();
 
-},{"core-js/stable":"eIyVg","regenerator-runtime/runtime":"cH8Iq","./model.js":"6Yfb5","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./views/recipeView.js":"9q0mt"}],"eIyVg":[function(require,module,exports) {
+},{"core-js/stable":"eIyVg","regenerator-runtime/runtime":"cH8Iq","./model.js":"6Yfb5","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./views/recipeView.js":"9q0mt","./views/searchView.js":"51HTZ"}],"eIyVg":[function(require,module,exports) {
 require('../modules/es.symbol');
 require('../modules/es.symbol.description');
 require('../modules/es.symbol.async-iterator');
@@ -16343,15 +16356,21 @@ parcelHelpers.export(exports, "state", ()=>state
 );
 parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe
 );
+parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults
+);
 var _configJs = require("./config.js");
 var _helpers = require("./helpers");
 const state = {
     recipe: {
+    },
+    search: {
+        query: '',
+        results: []
     }
 };
 const loadRecipe = async function(id) {
     try {
-        const data = await _helpers.getJSON(`${_configJs.API_URL}/${id}`);
+        const data = await _helpers.getJSON(`${_configJs.API_URL}${id}`);
         const { recipe  } = data.data;
         state.recipe = {
             id: recipe.id,
@@ -16369,6 +16388,45 @@ const loadRecipe = async function(id) {
         throw err;
     }
 };
+const loadSearchResults = async function(query) {
+    try {
+        state.search.query = query;
+        const data = await _helpers.getJSON(`${_configJs.API_URL}?search=${query}`);
+        state.search.results = data.data.recipes.map((rec)=>{
+            return {
+                id: rec.id,
+                title: rec.title,
+                publisher: rec.publisher,
+                image: rec.image_url,
+                ...rec.key && {
+                    key: rec.key
+                }
+            };
+        });
+    //   state.search.page = 1;
+    } catch (err) {
+        console.error(`${err} 💥💥💥💥`);
+        throw err;
+    }
+}; // export const loadSearchResults = async function(query){
+ //     try{
+ //         state.search.query=query;
+ //         const data = await getJSON(`{${API_URL}?search=${query}`);
+ //         console.log(data);
+ //         state.search.results=data.data.recipes.map(rec=>{
+ //             return{
+ //                 id: rec.id,
+ //                 title: rec.title,
+ //                 publisher: rec.publisher,
+ //                 image: rec.image_url
+ //             }
+ //         })
+ //         console.log(state.search.results)
+ //     }catch(err){
+ //         console.log(err);
+ //         throw err;
+ //     }
+ // }
 
 },{"./config.js":"beA2m","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./helpers":"9l3Yy"}],"beA2m":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -16377,7 +16435,7 @@ parcelHelpers.export(exports, "API_URL", ()=>API_URL
 );
 parcelHelpers.export(exports, "TIMEOUT_SEC", ()=>TIMEOUT_SEC
 );
-const API_URL = 'https://forkify-api.herokuapp.com/api/v2/recipes';
+const API_URL = 'https://forkify-api.herokuapp.com/api/v2/recipes/';
 const TIMEOUT_SEC = 10;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"JacNc":[function(require,module,exports) {
@@ -16446,12 +16504,11 @@ parcelHelpers.defineInteropFlag(exports);
 var _iconsSvg = require("url:../../img/icons.svg");
 var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
 var _fractional = require("fractional");
-console.log(_fractional.Fraction);
 class RecipeView {
     #parentElement = document.querySelector('.recipe');
     #data;
     #errorMessage = 'Recipe not found try another one';
-    #messsage = '';
+    #message = '';
     render(data) {
         this.#data = data;
         const markup = this.#generateMarkup();
@@ -16776,6 +16833,28 @@ Fraction.primeFactors = function(n) {
 };
 module.exports.Fraction = Fraction;
 
-},{}]},["drOo7","jKMjS"], "jKMjS", "parcelRequire3a11")
+},{}],"51HTZ":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class SearchView {
+    _parentEl = document.querySelector('.search');
+    getQuery() {
+        const query = this._parentEl.querySelector('.search__field').value;
+        this._clearInput();
+        return query;
+    }
+    _clearInput() {
+        this._parentEl.querySelector('.search__field').value = '';
+    }
+    addHandlerSearch(handler) {
+        this._parentEl.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handler();
+        });
+    }
+}
+exports.default = new SearchView();
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}]},["drOo7","jKMjS"], "jKMjS", "parcelRequire3a11")
 
 //# sourceMappingURL=index.436439df.js.map
