@@ -482,19 +482,19 @@ const controlSearchResults = async function() {
     try {
         const query = _searchViewJsDefault.default.getQuery();
         if (!query) return;
-        await _modelJs.loadSearchResults(query);
-        console.log(_modelJs.state.search.results);
+    //  await model.loadSearchResults(query);
+    // console.log(model.state.search.results);
     } catch (err) {
         console.log(err);
     }
 };
 const init = function() {
     _recipeViewJsDefault.default.addHandlerRender(controlRecipes);
-    _searchViewJsDefault.default.addHandlerSearch(controlSearchResults);
+// searchView.addHandlerSearch(controlSearchResults);
 };
 init();
 
-},{"core-js/stable":"eIyVg","regenerator-runtime/runtime":"cH8Iq","./model.js":"6Yfb5","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./views/recipeView.js":"9q0mt","./views/searchView.js":"51HTZ"}],"eIyVg":[function(require,module,exports) {
+},{"core-js/stable":"eIyVg","regenerator-runtime/runtime":"cH8Iq","./model.js":"6Yfb5","./views/recipeView.js":"9q0mt","./views/searchView.js":"51HTZ","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"eIyVg":[function(require,module,exports) {
 require('../modules/es.symbol');
 require('../modules/es.symbol.description');
 require('../modules/es.symbol.async-iterator');
@@ -16356,8 +16356,6 @@ parcelHelpers.export(exports, "state", ()=>state
 );
 parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe
 );
-parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults
-);
 var _configJs = require("./config.js");
 var _helpers = require("./helpers");
 const state = {
@@ -16387,48 +16385,48 @@ const loadRecipe = async function(id) {
         console.error(err);
         throw err;
     }
-};
-const loadSearchResults = async function(query) {
-    try {
-        state.search.query = query;
-        const data = await _helpers.getJSON(`${_configJs.API_URL}?search=${query}`);
-        state.search.results = data.data.recipes.map((rec)=>{
-            return {
-                id: rec.id,
-                title: rec.title,
-                publisher: rec.publisher,
-                image: rec.image_url,
-                ...rec.key && {
-                    key: rec.key
-                }
-            };
-        });
-    //   state.search.page = 1;
-    } catch (err) {
-        console.error(`${err} 💥💥💥💥`);
-        throw err;
-    }
-}; // export const loadSearchResults = async function(query){
+} // export const loadSearchResults = async function (query) {
+ //     try {
+ //       state.search.query = query;
+ //       const data = await getJSON(`${API_URL}?search=${query}`);
+ //       state.search.results = data.data.recipes.map(rec => {
+ //         return {
+ //           id: rec.id,
+ //           title: rec.title,
+ //           publisher: rec.publisher,
+ //           image: rec.image_url,
+ //           ...(rec.key && { key: rec.key }),
+ //         };
+ //       });
+ //     //   state.search.page = 1;
+ //     } catch (err) {
+ //       console.error(`${err} 💥💥💥💥`);
+ //       throw err;
+ //     }
+ //   };
+ // export const loadSearchResults = async function(query){
  //     try{
- //         state.search.query=query;
+ //         // state.search.query=query;
  //         const data = await getJSON(`{${API_URL}?search=${query}`);
  //         console.log(data);
- //         state.search.results=data.data.recipes.map(rec=>{
- //             return{
- //                 id: rec.id,
- //                 title: rec.title,
- //                 publisher: rec.publisher,
- //                 image: rec.image_url
- //             }
- //         })
- //         console.log(state.search.results)
+ //         // state.search.results=data.data.recipes.map(rec=>{
+ //         //     return{
+ //         //         id: rec.id,
+ //         //         title: rec.title,
+ //         //         publisher: rec.publisher,
+ //         //         image: rec.image_url
+ //         //     }
+ //         // })
+ //         // console.log(state.search.results)
+ //   console.log(err);
  //     }catch(err){
- //         console.log(err);
  //         throw err;
  //     }
  // }
+ // controlSearchResults('')
+;
 
-},{"./config.js":"beA2m","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./helpers":"9l3Yy"}],"beA2m":[function(require,module,exports) {
+},{"./config.js":"beA2m","./helpers":"9l3Yy","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"beA2m":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "API_URL", ()=>API_URL
@@ -16499,7 +16497,7 @@ const getJSON = async function(url) {
     }
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./config":"beA2m","http":"dRxnr"}],"dRxnr":[function(require,module,exports) {
+},{"http":"dRxnr","./config":"beA2m","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"dRxnr":[function(require,module,exports) {
 var global = arguments[3];
 var ClientRequest = require('./lib/request');
 var response = require('./lib/response');
@@ -16572,8 +16570,8 @@ http.METHODS = [
 ];
 
 },{"./lib/request":"3C442","./lib/response":"hE1hx","xtend":"6h06z","builtin-status-codes":"avvrf","url":"8glPb"}],"3C442":[function(require,module,exports) {
-var process = require("process");
 var Buffer = require("buffer").Buffer;
+var process = require("process");
 var global = arguments[3];
 var capability = require('./capability');
 var inherits = require('inherits');
@@ -16845,7 +16843,7 @@ var unsafeHeaders = [
     'via'
 ];
 
-},{"process":"6Upk8","buffer":"bpNHw","./capability":"e4ZHB","inherits":"bYMAq","./response":"hE1hx","readable-stream":"8y686"}],"bpNHw":[function(require,module,exports) {
+},{"buffer":"bpNHw","process":"6Upk8","./capability":"e4ZHB","inherits":"bYMAq","./response":"hE1hx","readable-stream":"8y686"}],"bpNHw":[function(require,module,exports) {
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -18324,9 +18322,9 @@ module.exports = function inherits1(ctor, superCtor) {
 };
 
 },{}],"hE1hx":[function(require,module,exports) {
+var global = arguments[3];
 var process = require("process");
 var Buffer = require("buffer").Buffer;
-var global = arguments[3];
 var capability = require('./capability');
 var inherits = require('inherits');
 var stream = require('readable-stream');
@@ -18501,7 +18499,7 @@ IncomingMessage.prototype._onXHRProgress = function(resetTimers) {
     }
 };
 
-},{"buffer":"bpNHw","process":"6Upk8","./capability":"e4ZHB","inherits":"bYMAq","readable-stream":"8y686"}],"8y686":[function(require,module,exports) {
+},{"process":"6Upk8","buffer":"bpNHw","./capability":"e4ZHB","inherits":"bYMAq","readable-stream":"8y686"}],"8y686":[function(require,module,exports) {
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = exports;
 exports.Readable = exports;
@@ -20271,8 +20269,8 @@ Object.defineProperty(Duplex.prototype, 'destroyed', {
 });
 
 },{"process":"6Upk8","./_stream_readable":"af94d","./_stream_writable":"1xHDW","inherits":"bYMAq"}],"1xHDW":[function(require,module,exports) {
-var global = arguments[3];
 var process = require("process");
+var global = arguments[3];
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -22883,7 +22881,7 @@ class RecipeView {
 }
 exports.default = new RecipeView();
 
-},{"url:../../img/icons.svg":"iwCpK","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","fractional":"40qvl"}],"iwCpK":[function(require,module,exports) {
+},{"url:../../img/icons.svg":"iwCpK","fractional":"40qvl","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"iwCpK":[function(require,module,exports) {
 module.exports = require('./helpers/bundle-url').getBundleURL('8LZRF') + "icons.c097e590.svg";
 
 },{"./helpers/bundle-url":"8YnfL"}],"8YnfL":[function(require,module,exports) {

@@ -41,8 +41,8 @@ const controlSearchResults = async function(){
      const query = searchView.getQuery();
      if (!query) return;
 
-     await model.loadSearchResults(query);
-    console.log(model.state.search.results);
+    //  await model.loadSearchResults(query);
+    // console.log(model.state.search.results);
 
   }catch(err){
     console.log(err)
@@ -52,7 +52,7 @@ const controlSearchResults = async function(){
 
 const init = function(){
   recipeView.addHandlerRender(controlRecipes);
-  searchView.addHandlerSearch(controlSearchResults);
+  // searchView.addHandlerSearch(controlSearchResults);
 }
 
 init()
